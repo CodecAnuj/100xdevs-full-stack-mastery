@@ -2,6 +2,9 @@
 
 ```jsx
 git clone https://github.com/100xdevs-cohort-2/week-17-final-code
+
+git rm --cached "0-1/MyCode/Week 8/Week 8.2/paytm"
+rm -rf "0-1/MyCode/Week 8/Week 8.2/paytm"/.git"
 ```
 
 - npm install
