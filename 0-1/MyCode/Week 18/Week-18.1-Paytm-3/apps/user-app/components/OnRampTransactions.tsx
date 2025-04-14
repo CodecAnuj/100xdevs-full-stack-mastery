@@ -13,7 +13,7 @@ export const OnRampTransactions = ({
 }) => {
     if (!transactions.length) {
         return <Card title="Recent Transactions">
-            <div className="text-center pb-8 pt-8">
+            <div className="pt-8 pb-8 text-center">
                 No Recent transactions
             </div>
         </Card>
@@ -25,7 +25,7 @@ export const OnRampTransactions = ({
                     <div className="text-sm">
                         Received INR
                     </div>
-                    <div className="text-slate-600 text-xs">
+                    <div className="text-xs text-slate-600">
                         {t.time.toDateString()}
                     </div>
                 </div>
