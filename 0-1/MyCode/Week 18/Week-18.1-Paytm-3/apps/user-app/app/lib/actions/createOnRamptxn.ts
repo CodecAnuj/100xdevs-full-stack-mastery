@@ -9,7 +9,7 @@ export async function createOnRampTransaction(
   provider: string
 ) {
   const session = await getServerSession(authOptions);
-  const userId = session.user.id;
+  const userId =  await session.user.id;
   const token = Math.random().toString();
 
   if (!userId) {

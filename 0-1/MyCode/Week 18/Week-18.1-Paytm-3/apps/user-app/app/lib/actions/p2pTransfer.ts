@@ -2,7 +2,6 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth";
 import prisma from "@repo/db/client";
-import { error } from "console";
 
 export async function p2pTransfer(to: string, amount: number) {
   const session = await getServerSession(authOptions);
@@ -24,11 +23,13 @@ export async function p2pTransfer(to: string, amount: number) {
     };
   }
   await prisma.$transaction(async (tx) => {
-    await tx.$queryRaw`SELECT * FROM "Banlance" WHERE "userId" = ${Number(from)} FOR UPDATE`; //Locking
+    // Lockin for the prostgress so that while updating can be done only by one user.
+    await tx.$queryRaw`SELECT * FROM "Balance" WHERE "userId" = ${Number(from)} FOR UPDATE`;
 
     const fromBalance = await tx.balance.findUnique({
       where: { userId: Number(from) },
     });
+
     if (!fromBalance || fromBalance.amount < amount) {
       throw new Error("Insufficient funds");
     }
@@ -42,5 +43,17 @@ export async function p2pTransfer(to: string, amount: number) {
       where: { userId: toUser.id },
       data: { amount: { increment: amount } },
     });
-  });
+
+    await tx.p2pTransfer.create({
+      data: {
+        fromUserId: Number(from),
+        toUserId: toUser.id,
+        amount,
+        timestamp: new Date()
+      }
+    })
+  })
+  return {
+    message: 'Transaction successful...',
+  }
 }
